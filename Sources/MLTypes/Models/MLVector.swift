@@ -8,7 +8,7 @@
 import Foundation
 
 
-struct MLVector<T> where T: Randomizable, T: Numeric {
+public struct MLVector<T> where T: Randomizable, T: Numeric {
     var elements: [T]
     
     var size: Int {
@@ -59,25 +59,43 @@ struct MLVector<T> where T: Randomizable, T: Numeric {
     }
     
     // Vector-Scalar operations
-   
+
+    /// Increases each element of the vector by a scalar value.
+    ///
+    /// - Parameter scalar: The scalar value to add to each element of the vector.
+    /// - Returns: A new `MLVector` instance with each element increased by the scalar value.
     func increase(by scalar: T) -> MLVector<T> {
         return MLVector<T>(self.elements.map { $0 + scalar })
     }
     
+    /// Decreases each element of the vector by a scalar value.
+    ///
+    /// - Parameter scalar: The scalar value to subtract from each element of the vector.
+    /// - Returns: A new `MLVector` instance with each element decreased by the scalar value.
     func decrease(by scalar: T) -> MLVector<T> {
         return MLVector<T>(self.elements.map { $0 - scalar })
     }
-    
+
+    /// Scales each element of the vector by a scalar value.
+    ///
+    /// - Parameter scalar: The scalar value to multiply with each element of the vector.
+    /// - Returns: A new `MLVector` instance with each element scaled by the scalar value.
     func scale(by scalar: T) -> MLVector<T> {
         return MLVector<T>(self.elements.map { $0 * scalar })
     }
-    
+
     // Utility methods
-    
+
+    /// Converts the vector into a matrix.
+    ///
+    /// - Returns: A new `MLMatrix` instance representing the vector as a single-row matrix.
     func matrix() -> MLMatrix<T> {
         return MLMatrix<T>([self.elements])
     }
-    
+
+    /// Computes the transpose of the vector represented as a matrix.
+    ///
+    /// - Returns: A new `MLMatrix` instance representing the transpose of the vector.
     func transpose() -> MLMatrix<T> {
         return self.matrix().transpose()
     }

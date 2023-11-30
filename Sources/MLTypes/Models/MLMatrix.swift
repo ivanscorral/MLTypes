@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MLMatrix<T> where T: Randomizable, T: Numeric {
+public struct MLMatrix<T> where T: Randomizable, T: Numeric {
     var grid: [[T]]
     
     var rows: Int { return grid.count }
@@ -29,12 +29,27 @@ struct MLMatrix<T> where T: Randomizable, T: Numeric {
         self.grid = [[T]](repeating: [T](repeating: T.random(in: range), count: columns), count: randomRows)
     }
     
-    func column(_ index: Int) -> [T] {
-        return (0..<self.rows).map { self[$0][index] }
+    /// Retrieves a column from the matrix as a vector.
+    ///
+    /// - Parameter index: An Int representing the index of the column to retrieve. The index is zero-based.
+    /// - Returns: An MLVector<T> representing the column at the specified index.
+    func column(_ index: Int) -> MLVector<T> {
+        return MLVector<T>(grid.map { $0[index] })
+    }
+    
+    /// Retrieves a row from the matrix as a vector.
+    ///
+    /// - Parameter index: An Int representing the index of the row to retrieve. The index is zero-based.
+    /// - Returns: An MLVector<T> representing the row at the specified index.
+    func row(_ index: Int) -> MLVector<T> {
+        return MLVector<T>(grid[index])
     }
     
     // Matrix operations
     
+    /// Computes the transpose of the matrix.
+    ///
+    /// - Returns: A new `MLMatrix` instance representing the transpose of the matrix, where the rows become columns and vice versa.
     func transpose() -> MLMatrix<T> {
         var result = MLMatrix<T>(rows: self.columns, columns: self.rows)
         
@@ -46,8 +61,11 @@ struct MLMatrix<T> where T: Randomizable, T: Numeric {
         
         return result
     }
-    
-    // Element-wise operations
+
+    /// Applies a transformation to each element of the matrix.
+    ///
+    /// - Parameter transform: A closure that takes an element of type `T` and returns it in the transformed form.
+    /// - Returns: A new `MLMatrix` instance where each element has been transformed using the provided closure.
     func map(_ transform: (T) -> T) -> MLMatrix<T> {
         var result = MLMatrix<T>(rows: self.rows, columns: self.columns)
         
@@ -101,16 +119,30 @@ struct MLMatrix<T> where T: Randomizable, T: Numeric {
         return result
     }
     
-    func dot(_ other: MLMatrix<T>) -> T {
-        precondition(self.rows == 1 && self.columns == other.rows && other.columns == 1, "Matrix dimensions must be equal")
-        return zip(self[0], other.column(0)).map(*).reduce(T.zero, +)
+    /// Computes the dot product of this matrix with another matrix.
+    ///
+    /// The function calculates the dot product by multiplying corresponding elements and summing the results.
+    /// This operation is only valid when the number of columns in the first matrix equals the number of rows in the second matrix.
+    ///
+    /// - Parameter other: Another `MLMatrix` instance to compute the dot product with.
+    /// - Returns: A scalar value of type `T` representing the dot product of the two matrices, or `nil` if the matrices do not have compatible dimensions.
+    func dot(_ other: MLMatrix<T>) -> T? {
+        guard self.columns == other.rows else {
+            return nil
+        }
+
+        var result: T = T.zero
+        for i in 0..<self.rows {
+            for j in 0..<other.columns {
+                result += self[i][j] * other[j][i]
+            }
+        }
+
+        return result
     }
+
     
-    // MARK: - Matrix-Vector operations
-    
-    public init(from vector: MLVector<T>) {
-        self.grid = vector.map { $0 }
-    }
+
     
     
 }
