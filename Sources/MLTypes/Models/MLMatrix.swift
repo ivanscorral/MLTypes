@@ -10,8 +10,8 @@ import Foundation
 public struct MLMatrix<T> where T: Randomizable, T: Numeric {
     var grid: [[T]]
     
-    var rows: Int { return grid.count }
-    var columns: Int { return grid[0].count }
+    public var rows: Int { return grid.count }
+    public var columns: Int { return grid[0].count }
     
     public init(_ grid: [[T]]) {
         self.grid = grid
@@ -127,9 +127,7 @@ public struct MLMatrix<T> where T: Randomizable, T: Numeric {
     /// - Parameter other: Another `MLMatrix` instance to compute the dot product with.
     /// - Returns: A scalar value of type `T` representing the dot product of the two matrices, or `nil` if the matrices do not have compatible dimensions.
     func dot(_ other: MLMatrix<T>) -> T? {
-        guard self.columns == other.rows else {
-            return nil
-        }
+        precondition(self.columns == other.rows, "Matrix dimensions must be equal")
 
         var result: T = T.zero
         for i in 0..<self.rows {
@@ -140,8 +138,6 @@ public struct MLMatrix<T> where T: Randomizable, T: Numeric {
 
         return result
     }
-
-    
 
     
     
