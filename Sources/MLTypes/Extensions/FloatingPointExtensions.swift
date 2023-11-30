@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  FloatingPointExtensions.swift
 //  
 //
 //  Created by Ivan Sanchez on 28/11/23.
