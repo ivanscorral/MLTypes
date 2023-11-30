@@ -71,7 +71,30 @@ struct MLVector<T> where T: Randomizable, T: Numeric {
     func scale(by scalar: T) -> MLVector<T> {
         return MLVector<T>(self.elements.map { $0 * scalar })
     }
+    
+    // Utility methods
+    
+    func matrix() -> MLMatrix<T> {
+        return MLMatrix<T>([self.elements])
+    }
+    
+    func transpose() -> MLMatrix<T> {
+        return self.matrix().transpose()
+    }
 
+}
+
+// MARK: - Subscripts
+
+extension MLVector {
+    subscript(index: Int) -> T {
+        get {
+            return self.elements[index]
+        }
+        set {
+            self.elements[index] = newValue
+        }
+    }
 }
 
 
