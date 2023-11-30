@@ -25,7 +25,38 @@
 
 ## Usage
 
-[Provide basic usage examples for `MLVector`, `MLMatrix`, and extensions]
+### Initializing Matrices and Vectors
+
+```swift
+let matrix1: MLMatrix<Int> = MLMatrix(rows: 2, columns: 3, defaultValue: 5) // Type definition is optional
+let matrix2 = MLMatrix([[1, 2, 3], [4, 5, 6]])
+
+let vector1: MLVector<Int> = MLVector([1, 2, 3])
+let vector2 = MLVector(repeating: 4, size: 3)
+```
+
+### Matrix Operations
+
+```swift
+let transposedMatrix = matrix1.transpose() // Transpose a matrix
+let matrixSum = matrix1 + matrix2 // Add two matrices
+let productVector: MLVector<Int> = matrix1 * vector1 // Multiply a matrix by a vector (type definition not required)
+```
+
+### Vector Operations
+
+```swift
+let vectorSum = vector1 + vector2 // Vector addition
+let dotProduct = vector1.dot(vector2) // Dot product of two vectors
+let scaledVector = vector1.scale(by: 2) // Vector scaling
+```
+
+### Advanced Operations
+
+```swift
+let rowDotProduct = matrix1.dot(with: vector1, atRow: 0) // Dot product of a matrix row and a vector
+let vectorMatrixProduct = vector1 * matrix2 // Multiplication of a vector by a matrix
+```
 
 ## Contributing
 
