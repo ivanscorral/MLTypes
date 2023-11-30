@@ -11,6 +11,9 @@ import Foundation
 public struct MLVector<T> where T: Randomizable, T: Numeric {
     var elements: [T]
     
+    /// The number of elements in the
+    ///
+    /// - Returns: The number of elements in the vector.
     var size: Int {
         return elements.count
     }
@@ -48,14 +51,30 @@ public struct MLVector<T> where T: Randomizable, T: Numeric {
         return lhs.dot(rhs)
     }
     
+    /// Computes the Hadamard product (element-wise multiplication) of two vectors.
+    /// - Parameters:
+    ///   - lhs: The left-hand side vector to multiply.
+    ///   - rhs: The right-hand side vector to multiply.
+    /// - Returns: A new `MLVector` representing the Hadamard product of the input vectors.
+    /// - Precondition: Both vectors must have the same number of elements.
     public static func hadamardProduct(_ lhs: MLVector<T>, _ rhs: MLVector<T>) -> MLVector<T> {
         assert(lhs.size == rhs.size, "Vectors must have the same size")
-        return MLVector<T>(zip(lhs.elements, rhs.elements).map(*))
+        return MLVector<T>(zip(lhs.elements, rhs.elements).map { $0 * $1 })
     }
     
-    public func dot(_ other: MLVector<T>) -> T {
+    /// Calculates the dot product of this vector with another vector.
+    ///
+    /// This function computes the sum of the products of corresponding elements
+    /// from this vector and another vector of the same size. This operation is
+    /// commonly known as the dot product or inner product. An assertion failure
+    /// occurs if the vectors have different sizes.
+    ///
+    /// - Parameter other: The other vector to compute the dot product with.
+    /// - Returns: The dot product of this vector and the `other` vector.
+    /// - Complexity: O(n) where n is the number of elements in the vectors.
+    func dot(_ other: MLVector<T>) -> T {
         assert(self.size == other.size, "Vectors must have the same size")
-        return zip(self.elements, other.elements).map(*).reduce(0, +)
+        return zip(self.elements, other.elements).map({ $0 * $1 }).reduce(0, +)
     }
     
     // Vector-Scalar operations
@@ -64,24 +83,24 @@ public struct MLVector<T> where T: Randomizable, T: Numeric {
     ///
     /// - Parameter scalar: The scalar value to add to each element of the vector.
     /// - Returns: A new `MLVector` instance with each element increased by the scalar value.
-    func increase(by scalar: T) -> MLVector<T> {
-        return MLVector<T>(self.elements.map { $0 + scalar })
+    public func increase(by scalar: T) -> MLVector<T> {
+        return self.map { $0 + scalar }
     }
     
     /// Decreases each element of the vector by a scalar value.
     ///
     /// - Parameter scalar: The scalar value to subtract from each element of the vector.
     /// - Returns: A new `MLVector` instance with each element decreased by the scalar value.
-    func decrease(by scalar: T) -> MLVector<T> {
-        return MLVector<T>(self.elements.map { $0 - scalar })
+    public func decrease(by scalar: T) -> MLVector<T> {
+        return self.map { $0 - scalar }
     }
 
     /// Scales each element of the vector by a scalar value.
     ///
     /// - Parameter scalar: The scalar value to multiply with each element of the vector.
     /// - Returns: A new `MLVector` instance with each element scaled by the scalar value.
-    func scale(by scalar: T) -> MLVector<T> {
-        return MLVector<T>(self.elements.map { $0 * scalar })
+    public func scale(by scalar: T) -> MLVector<T> {
+        return self.map { $0 * scalar }
     }
 
     // Utility methods
